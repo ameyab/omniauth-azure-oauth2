@@ -50,6 +50,14 @@ module OmniAuth
         }
       end
 
+      credentials do
+        hash = {"token" => access_token.token}
+        hash.merge!("refresh_token" => access_token.refresh_token) if access_token.expires? && access_token.refresh_token
+        hash.merge!("expires_at" => access_token.expires_at) if access_token.expires?
+        hash.merge!("expires" => access_token.expires_in)
+        hash
+      end
+
       ## overridden because callback_url in the omniauth strategy.
       ## it appends the code parameter to the callback_url and azure 
       ## gives a invalid_grant error because it thinks the callback_url is invalid.
